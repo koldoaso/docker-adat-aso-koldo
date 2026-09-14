@@ -105,7 +105,7 @@ pip install mariadb python-dotenv
 
 Generamos los requerimientos.
 
-````
+```
 pip freeze > requirements.txt
 ```
 
@@ -116,3 +116,97 @@ Entramos dentro del environment tal como se describió en los pasos anteriores y
 ```
 py .\clientes.py
 ```
+
+# Ejercicio 4
+
+Se utiliza el driver oficial de MariaDB:
+
+```
+<dependency>
+    <groupId>org.mariadb.jdbc</groupId>
+    <artifactId>mariadb-java-client</artifactId>
+    <version>3.5.6</version>
+</dependency>
+```
+
+El pom.xml está configurado con:
+
+```
+<maven.compiler.source>21</maven.compiler.source>
+<maven.compiler.target>21</maven.compiler.target>
+```
+
+## Versión de Java
+
+El proyecto utiliza Java 21.
+
+Para comprobar la versión instalada:
+
+```
+java -version
+mvn -version
+```
+
+## Variables de entorno
+
+La configuración de conexión se obtiene mediante variables de entorno:
+
+DB_URL=jdbc:mariadb://localhost:3306/empresa
+DB_USER=adat
+DB_PASSWORD=admin
+
+En PowerShell se pueden configurar mediante:
+
+```
+$env:DB_URL="jdbc:mariadb://localhost:3306/empresa"
+$env:DB_USER="adat"
+$env:DB_PASSWORD="admin"
+```
+
+## Compilación
+
+Desde la carpeta java-jdbc/:
+
+```
+mvn clean compile
+```
+
+## Ejecucion
+
+```
+mvn exec:java "-Dexec.mainClass=org.example.Main"
+```
+
+## PreparedStatement
+
+consultas que utilizan valores proporcionados por el programa utilizan PreparedStatement y parámetros
+
+Por ejemplo:
+
+```
+PreparedStatement ps = conexion.prepareStatement(
+    "INSERT INTO clientes(nombre) VALUES (?)"
+);
+
+ps.setString(1, nombre);
+```
+
+Con ello los valores no se concatenan directamente en las sentencias SQL. Los parámetros se establecen mediante métodos como setString() y setInt()
+
+Esto separa la sentencia SQL de los datos, reduciendo el riesgo de ataques mediante inyecciones SQL.
+
+## Try-with-resources
+
+Esto sirve para que la conexion, los PreparedStatement y los ResultSet se gestionen mediante try-with-resources.
+
+Por ejemplo:
+
+```
+try (PreparedStatement ps = conexion.prepareStatement(sql);
+     ResultSet rs = ps.executeQuery()) {
+
+    // Procesamiento de resultados
+}
+```
+
+Con esto, los recursos se cierran automáticamente al finalizar el bloque, incluso cuando se produce una excepción. Con ello evitamos problemas de dejar leaks de recursos que pueden llevar a errores como que el programa se quede sin canales de comunicación y lance excepciones como SQLException o IOException
