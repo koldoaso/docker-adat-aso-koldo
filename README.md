@@ -1,3 +1,5 @@
+# Ejercicio 1.
+
 Realizar el siguiente comando para generar y correr un contenedor Docker con el nombre mariadb-adat y la password admin.
 
 ```
@@ -73,4 +75,44 @@ CREATE TABLE prueba_persistencia (
 
 INSERT INTO prueba_persistencia (mensaje)
 VALUES ('persistencia funciona');
+```
+
+# Ejercicio 3.
+
+Crear el environment para Python con el siguiente comando.
+
+```
+python -m venv ./python/.venv
+```
+
+Nos movemos al directorio de Python.
+
+```
+cd python
+```
+
+Activamos el environment utilizando el script dependiendo del sistema operativo, en nuestro caso, Windows 10.
+
+```
+.\.venv\Scripts\Activate.ps1 
+```
+
+Instalamos los paquetes requeridos para mariadb y para utilizar .env.
+
+```
+pip install mariadb python-dotenv
+```
+
+Generamos los requerimientos.
+
+````
+pip freeze > requirements.txt
+```
+
+## Ejecución del programa
+
+Entramos dentro del environment tal como se describió en los pasos anteriores y añadimos el siguiente comando desde la carpeta python para iniciar el script.
+
+```
+py .\clientes.py
 ```
